@@ -14,4 +14,18 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap-sprockets
+//= require angular
+//= require angular-animate
+//= require angular-bootstrap
+//= require angular-cookies
+//= require angular-resource
+//= require angular-sanitize
+//= require angular-touch
+//= require angular-route
+//= require angular-ui-router
+//= require angular-rails-templates
+//= require angular-app/app.js
+//= require_tree ./angular-app
+// Templates in app/assets/templates
+//= require_tree ../templates
 //= require_tree .

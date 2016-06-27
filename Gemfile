@@ -26,3 +26,6 @@ end
 group :production do
   gem 'rails_12factor'
 end
+
+gem 'bower-rails'
+gem 'angular-rails-templates'
