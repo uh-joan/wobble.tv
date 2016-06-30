@@ -28,6 +28,9 @@ angular
     VOTE_UP:         5,
     VOTE_DOWN:       6
   })
+  //.value('domain','http://localhost:3000')
+  .value('domain','https://fullsocialwobble.herokuapp.com')
+  //.value('domain','http://wobble.tv')
   .config(function ($routeProvider, $stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/main');
     //

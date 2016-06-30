@@ -8,12 +8,12 @@
  * Service in the apiCakeApp.
  */
 angular.module('wobbleApp')
-  .service('voteService', ['$http', '$q', function ($http, $q) {
+  .service('voteService', ['$http', '$q', 'domain', function ($http, $q, domain) {
     var vm = this;
 
     vm.createVote = function(vote){
       var deferred = $q.defer();
-      $http.post('http://localhost:3000/votes', {vote: vote}).then(function(response){
+      $http.post(domain+'/votes', {vote: vote}).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);
@@ -24,7 +24,7 @@ angular.module('wobbleApp')
     vm.query = function(videoId, time){
       var deferred = $q.defer();
 
-      $http.get('http://localhost:3000/amount/'+videoId+'/'+time).then(function(response){
+      $http.get(domain+'/amount/'+videoId+'/'+time).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);
