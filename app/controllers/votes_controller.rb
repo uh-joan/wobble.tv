@@ -44,8 +44,8 @@ class VotesController < ApplicationController
 
   def amount
     # p "#{params[:time].class}"
-    votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time], params[:time].to_f+3).count()
-    votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time], params[:time].to_f+3).count()
+    votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time].to_f, params[:time].to_f+3).count()
+    votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time].to_f, params[:time].to_f+3).count()
 
     render json: {data: {up: votes_positive_count, down: votes_negative_count} }
   end
