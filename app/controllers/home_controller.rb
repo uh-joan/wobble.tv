@@ -1,7 +1,8 @@
 class HomeController < ApplicationController
 
   def index
-    @login_url = new_user_session_url
+    @signin_url = new_user_session_url
+    @signup_url = new_user_registration_path
     @home_url = root_path
     render layout: false
   end
