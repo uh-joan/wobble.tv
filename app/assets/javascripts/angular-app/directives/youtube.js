@@ -55,15 +55,18 @@ angular.module('wobbleApp')
                 switch(event.data) {
                   case YT.PlayerState.PLAYING:
                     message.data = "PLAYING";
+                    scope.$emit('play-video');
                     break;
                   case YT.PlayerState.ENDED:
                     message.data = "ENDED";
+                    scope.$emit('stop-video');
                     break;
                   case YT.PlayerState.UNSTARTED:
                     message.data = "NOT PLAYING";
                     break;
                   case YT.PlayerState.PAUSED:
                     message.data = "PAUSED";
+                    scope.$emit('pause-video');
                     break;
                 }
 
@@ -102,10 +105,12 @@ angular.module('wobbleApp')
 
         scope.$on(YT_event.PLAY, function () {
           player.playVideo();
+          scope.$emit('play-video');
         });
 
         scope.$on(YT_event.PAUSE, function () {
           player.pauseVideo();
+          scope.$emit('pause-video');
         });
 
         scope.$on(YT_event.VOTE_UP, function(){
