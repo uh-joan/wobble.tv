@@ -97,6 +97,7 @@ angular.module('wobbleApp')
         scope.$on(YT_event.STOP, function () {
           player.seekTo(0);
           player.stopVideo();
+          scope.$emit('stop-video');
         });
 
         scope.$on(YT_event.PLAY, function () {

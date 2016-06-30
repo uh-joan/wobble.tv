@@ -37,10 +37,11 @@ angular.module('wobbleApp')
     //  vm.yt.time = vm.yt.time + vm.yt.time_step;
     //});
     //vm.sendControlEvent(vm.YT_event.GET_TIME);
-    setInterval(function(){
+    vm.intervalId = setInterval(function(){
       //console.log(' tick');
       vm.sendControlEvent(vm.YT_event.GET_TIME);
     },3000);
+
 
     $scope.$on('get-time', function(event, data){
       //console.log('scope on get time ' + data.time);
@@ -59,6 +60,10 @@ angular.module('wobbleApp')
       });
     }
     }, true);
+
+    $scope.$on('stop-video', function(event){
+      clearInterval(vm.intervalId);
+    });
 
     $scope.$on('update-vote', function(event, data) {
       vm.yt.voteStatus = data;
