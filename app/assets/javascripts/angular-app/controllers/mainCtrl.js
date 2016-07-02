@@ -11,6 +11,8 @@ angular.module('wobbleApp')
   .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout',function ($scope, YT_event, voteService, $timeout) {
     var vm = this;
 
+    vm.data = [];
+    //vm.tempData = [];
     vm.yt = {
       width: 480,
       height: 320,
@@ -56,6 +58,10 @@ angular.module('wobbleApp')
     //  console.log('time: ' + newVal);
       voteService.query(vm.yt.videoid, newVal).then(function(response){
         vm.yt.votes = response.data;
+        //vm.tempData.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: newVal});
+        //if (newVal > 20) vm.data = vm.tempData;
+          vm.data.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: newVal});
+        //console.log('data in watch: ' + JSON.stringify(vm.data));
         //console.log('at interval ' + newVal + 'sec. to ' + (newVal+3) + 'sec., votes ' + response.data);
         //vm.yt.time = vm.yt.time + vm.yt.time_step;
       });

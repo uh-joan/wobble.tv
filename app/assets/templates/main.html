@@ -2,6 +2,14 @@
 <div class="row marketing">
     <div class="row">
         <div class="col-xs-10 col-xs-offset-1">
+            <!--<span>{{vm.data | json}}</span>-->
+            <wobble width="{{vm.yt.width}}" height="{{vm.yt.height}}" data="{{vm.data}}"></wobble>
+            <!--<area-chart class="area-chart" chart-data="vm.data"></area-chart>-->
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-10 col-xs-offset-1">
             <button class="btn btn-success" ng-click="vm.sendControlEvent(vm.YT_event.VOTE_UP)">
                 <span class="glyphicon glyphicon-thumbs-up"></span>
             </button>

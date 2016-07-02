@@ -29,3 +29,7 @@ end
 
 gem 'bower-rails'
 gem 'angular-rails-templates'
+
+# d3 visualisation
+gem 'd3-rails'
+gem 'd3-tip-rails'

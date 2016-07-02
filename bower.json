@@ -18,7 +18,8 @@
       "angular-route": "^1.4.0",
       "angular-ui-router": "latest",
       "angular-bootstrap": "latest",
-      "bootstrap": "^3.3.6"
+      "bootstrap": "^3.3.6",
+      "lodash": "latest"
     }
   }
 }

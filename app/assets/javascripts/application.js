@@ -23,6 +23,11 @@
 //= require angular-touch
 //= require angular-route
 //= require angular-ui-router
+//= require lodash/dist/lodash
+
+//= require d3
+//= require d3.tip
+
 //= require angular-rails-templates
 //= require angular-app/app.js
 //= require_tree ./angular-app
