@@ -116,7 +116,7 @@ angular.module('wobbleApp')
 
         // Define the axes
         xAxis = d3.svg.axis().scale(x)
-          .orient("bottom").ticks(5);
+          .orient("bottom").ticks(4).tickFormat(d3.time.format("%M:%S"));
 
         yAxis = d3.svg.axis().scale(y)
           .orient("left").ticks(5);
@@ -135,8 +135,10 @@ angular.module('wobbleApp')
         var data = JSON.parse(newVal);
         //console.log('data' + JSON.stringify(data) + ' typeof: ' + typeof(newVal));
 
+        var parseTime = d3.time.format("%H:%M:%S").parse;
+
         data.forEach(function(d) {
-          d.time = d.time;
+          d.time = parseTime(d.time);
           d.votes = +d.votes;
         });
 
@@ -175,11 +177,14 @@ angular.module('wobbleApp')
       scope.redrawChart = function(el, newVal){
         var data = JSON.parse(newVal);
 
+        var parseTime = d3.time.format("%H:%M:%S").parse;
+
         data.forEach(function(d) {
-          d.time = d.time;
+          d.time = parseTime(d.time);
           d.votes = +d.votes;
         });
 
+        //console.log(JSON.stringify(data));
         setChartParams(data, config);
 
         // Scale the range of the data
@@ -192,13 +197,13 @@ angular.module('wobbleApp')
 
         // Make the changes
         svg.select(".line")   // change the line
-          .duration(750)
+          .duration(250)
           .attr("d", valueline(data));
         svg.select(".x.axis") // change the x axis
-          .duration(750)
+          .duration(250)
           .call(xAxis);
         svg.select(".y.axis") // change the y axis
-          .duration(750)
+          .duration(250)
           .call(yAxis);
 
       };
@@ -206,7 +211,7 @@ angular.module('wobbleApp')
       function defaultSettings(){
         return {
           width: scope.width, // The plot width
-          height: scope.height // The plot height
+          height: scope.height/2 // The plot height
           //margin_left: 10,
           //arc_thickness: 0.2,
           //start_angle: 180,

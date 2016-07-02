@@ -11,7 +11,19 @@ angular.module('wobbleApp')
   .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout',function ($scope, YT_event, voteService, $timeout) {
     var vm = this;
 
-    vm.data = [];
+    vm.toHHMMSS = function (sec_num) {
+      //var sec_num = parseInt(this, 10); // don't forget the second param
+      var hours   = Math.floor(sec_num / 3600);
+      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+      var seconds = Math.floor(sec_num - (hours * 3600) - (minutes * 60));
+
+      if (hours   < 10) {hours   = "0"+hours;}
+      if (minutes < 10) {minutes = "0"+minutes;}
+      if (seconds < 10) {seconds = "0"+seconds;}
+      return hours+':'+minutes+':'+seconds;
+    };
+
+    vm.data = [{votes:0, time:'00:00:00'}];
     //vm.tempData = [];
     vm.yt = {
       width: 480,
@@ -58,9 +70,7 @@ angular.module('wobbleApp')
     //  console.log('time: ' + newVal);
       voteService.query(vm.yt.videoid, newVal).then(function(response){
         vm.yt.votes = response.data;
-        //vm.tempData.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: newVal});
-        //if (newVal > 20) vm.data = vm.tempData;
-          vm.data.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: newVal});
+          vm.data.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: vm.toHHMMSS(newVal+3)});
         //console.log('data in watch: ' + JSON.stringify(vm.data));
         //console.log('at interval ' + newVal + 'sec. to ' + (newVal+3) + 'sec., votes ' + response.data);
         //vm.yt.time = vm.yt.time + vm.yt.time_step;
@@ -91,16 +101,6 @@ angular.module('wobbleApp')
       });
     });
 
-    vm.toHHMMSS = function (sec_num) {
-      //var sec_num = parseInt(this, 10); // don't forget the second param
-      var hours   = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-      var seconds = Math.floor(sec_num - (hours * 3600) - (minutes * 60));
 
-      if (hours   < 10) {hours   = "0"+hours;}
-      if (minutes < 10) {minutes = "0"+minutes;}
-      if (seconds < 10) {seconds = "0"+seconds;}
-      return hours+':'+minutes+':'+seconds;
-    }
   }
   ]);

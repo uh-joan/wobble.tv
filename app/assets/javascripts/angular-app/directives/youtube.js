@@ -33,11 +33,11 @@ angular.module('wobbleApp')
               autoplay: 1,
               html5: 1,
               theme: "light",
-              modesbranding: 0,
+              modesbranding: 1,
               color: "white",
               iv_load_policy: 3,
               showinfo: 1,
-              controls: 1
+              controls: 0
             },
 
             height: scope.height,
