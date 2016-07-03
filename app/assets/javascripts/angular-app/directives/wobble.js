@@ -125,7 +125,7 @@ angular.module('wobbleApp')
         valueline = d3.svg.line()
           .x(function(d) { return x(d.time); })
           .y(function(d) { return y(d.votes); })
-          .interpolate("basis");
+          .interpolate("monotone");
 
       };
 
@@ -148,13 +148,13 @@ angular.module('wobbleApp')
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
+          .style("margin-left", "-50px")
           .append("g").attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
         // Scale the range of the data
         x.domain(d3.extent(data, function(d) { return d.time; }));
-        y.domain([d3.min(data, function(d) { return d.votes; }),
-          d3.max(data, function(d) { return d.votes; })]);
+        y.domain([-1,1]);
 
         // Add the valueline path.
         svg.append("path")
@@ -188,8 +188,10 @@ angular.module('wobbleApp')
         setChartParams(data, config);
 
         // Scale the range of the data
+        var min = d3.min(data, function(d) { return d.votes; });
+        var max = d3.max(data, function(d) { return d.votes; });
         x.domain(d3.extent(data, function(d) { return d.time; }));
-        y.domain([d3.min(data, function(d) { return d.votes; }), d3.max(data, function(d) { return d.votes; })]);
+        y.domain([min < -1.0 ? min: -1.0, max > 1.0 ? max: 1.0]);
 
         //console.log('hey: ' + JSON.stringify(data));
 
