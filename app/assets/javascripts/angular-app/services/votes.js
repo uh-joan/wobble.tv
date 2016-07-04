@@ -21,10 +21,10 @@ angular.module('wobbleApp')
       return deferred.promise;
     };
 
-    vm.query = function(videoId, time){
+    vm.query = function(videoId, time, time_step){
       var deferred = $q.defer();
 
-      $http.get(domain+'/amount/'+videoId+'/'+time).then(function(response){
+      $http.get(domain+'/amount/'+videoId+'/'+time_step+'/'+time).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);

@@ -43,11 +43,27 @@ class VotesController < ApplicationController
   end
 
   def amount
-    # p "#{params[:time].class}"
-    votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time].to_f, params[:time].to_f+3).count()
-    votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time].to_f, params[:time].to_f+3).count()
+    votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
+    votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
 
     render json: {data: {up: votes_positive_count, down: votes_negative_count} }
+  end
+
+  def all_amount
+    total_time = params[:total_time].to_f
+    time_step = params[:time_step].to_f
+    initial_time = 0.0
+    time = time_step
+    votes = Vote.where("video_id = ?", params[:video_id])
+    total_votes = []
+    while initial_time<total_time do
+      votes_positive_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='up'", initial_time, time).count()
+      votes_negative_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='down'", initial_time, time).count()
+      total_votes << {up: votes_positive_count, down: votes_negative_count, time: time}
+      initial_time = initial_time + time_step
+      time = time + time_step
+    end
+    render json: {data: total_votes }
   end
 
   # PATCH/PUT /votes/1

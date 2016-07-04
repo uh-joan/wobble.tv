@@ -8,7 +8,8 @@
  * Controller of the wobbleApp
  */
 angular.module('wobbleApp')
-  .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout',function ($scope, YT_event, voteService, $timeout) {
+  .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout', 'time_step',
+    function ($scope, YT_event, voteService, $timeout, time_step) {
     var vm = this;
 
     vm.toHHMMSS = function (sec_num) {
@@ -55,7 +56,7 @@ angular.module('wobbleApp')
       vm.intervalId = setInterval(function(){
         //console.log(' tick');
         vm.sendControlEvent(vm.YT_event.GET_TIME);
-      },3000);
+      },parseFloat(time_step)*1000);
     };
 
     $scope.$on('get-time', function(event, data){
@@ -68,9 +69,9 @@ angular.module('wobbleApp')
       //console.log('time has changed');
     if(newVal!=oldVal){
     //  console.log('time: ' + newVal);
-      voteService.query(vm.yt.videoid, newVal).then(function(response){
+      voteService.query(vm.yt.videoid, newVal.toString(), time_step).then(function(response){
         vm.yt.votes = response.data;
-          vm.data.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: vm.toHHMMSS(newVal+3)});
+          vm.data.push({votes: vm.yt.votes.up-vm.yt.votes.down, time: vm.toHHMMSS(newVal+parseFloat(time_step))});
         //console.log('data in watch: ' + JSON.stringify(vm.data));
         //console.log('at interval ' + newVal + 'sec. to ' + (newVal+3) + 'sec., votes ' + response.data);
         //vm.yt.time = vm.yt.time + vm.yt.time_step;

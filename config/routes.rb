@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users
 
-  get 'amount/:video_id/:time', defaults: {format: 'json'}, to: 'votes#amount'
+  get 'amount/:video_id/:time_step/:time', defaults: {format: 'json'}, to: 'votes#amount'
+  get 'all_amount/:video_id/:time_step/:total_time', defaults: {format: 'json'}, to: 'votes#all_amount'
 
 end
