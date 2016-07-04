@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   resources :votes, defaults: {format: 'json'}, only: [:create, :amount]
+  resources :videos, defaults: {format: 'json'}, only: [:index]
   resources :home, only: [:index]
 
   mount Upmin::Engine => '/admin'
