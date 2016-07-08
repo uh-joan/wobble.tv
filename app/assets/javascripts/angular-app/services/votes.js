@@ -13,7 +13,7 @@ angular.module('wobbleApp')
 
     vm.createVote = function(vote){
       var deferred = $q.defer();
-      $http.post(domain+'/votes', {vote: vote}).then(function(response){
+      $http.post('/votes', {vote: vote}).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);
@@ -24,7 +24,7 @@ angular.module('wobbleApp')
     vm.query = function(videoId, time, time_step){
       var deferred = $q.defer();
 
-      $http.get(domain+'/amount/'+videoId+'/'+time_step+'/'+time).then(function(response){
+      $http.get('/amount/'+videoId+'/'+time_step+'/'+time).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);
