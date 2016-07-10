@@ -40,3 +40,4 @@ gem 'd3-rails'
 gem 'd3-tip-rails'
 
 gem 'responsible' # json builder
+gem 'puma'
