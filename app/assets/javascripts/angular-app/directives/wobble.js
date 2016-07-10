@@ -7,7 +7,8 @@ angular.module('wobbleApp')
       scope: {
         width: '@',
         height: '@',
-        data: '@'
+        data: '@',
+        circle: '@'
       },
       link: link
     };
@@ -18,7 +19,6 @@ angular.module('wobbleApp')
       var margin = {top: 30, right: 20, bottom: 30, left: 50};
 
       var setChartParams=function(data, config){
-
         width = config.width - margin.left - margin.right;
         height = config.height - margin.top - margin.bottom;
 
@@ -37,13 +37,13 @@ angular.module('wobbleApp')
           .x(function(d) { return x(d.time); })
           .y(function(d) { return y(d.votes); })
           .interpolate("monotone");
-
       };
 
       scope.createChart = function(el, newVal, config){
 
         //console.log('create chart wobble');
         var data = JSON.parse(newVal);
+
         //console.log('data' + JSON.stringify(data) + ' typeof: ' + typeof(newVal));
 
         var parseTime = d3.time.format("%H:%M:%S").parse;
@@ -83,9 +83,16 @@ angular.module('wobbleApp')
           .attr("class", "y axis")
           .call(yAxis);
 
+        svg.append("circle")
+          .attr("class", "dot")
+          //.attr("cx", x(0))
+          //.attr("cy", y(0))
+          //.attr("r", 2)
+          .fill('blue');
+
       };
 
-      scope.redrawChart = function(el, newVal){
+      scope.redrawChart = function(el, newVal, config){
         var data = JSON.parse(newVal);
 
         var parseTime = d3.time.format("%H:%M:%S").parse;
@@ -118,7 +125,32 @@ angular.module('wobbleApp')
         svg.select(".y.axis") // change the y axis
           .duration(250)
           .call(yAxis);
+        svg.select(".dot")
+          .duration(250)
+          .attr("cx", x(0))
+          .attr("cy", y(0))
+          .attr("r", 6);
 
+      };
+
+      scope.redrawCircle = function(el, newVal){
+          var d = JSON.parse(newVal);
+
+          var parseTime = d3.time.format("%H:%M:%S").parse;
+
+          var data = {
+            time: parseTime(d.time),
+            votes: +d.votes
+          };
+
+        //console.log('circle: ' + JSON.stringify(data));
+
+          svg = d3.select(el).transition();
+
+          svg.select(".dot")
+            .duration(250)
+            .attr("cx", x(data.time))
+            .attr("cy", y(data.votes));
       };
 
       function defaultSettings(){
@@ -153,6 +185,10 @@ angular.module('wobbleApp')
       //  //}
       //}, true);
 
+
+
+
+
       scope.$watch('data', function(newVal, oldVal){
         //console.log('data changed');
         if (newVal !== oldVal) {
@@ -163,6 +199,16 @@ angular.module('wobbleApp')
           scope.redrawChart(element[0], newVal, config);
         }
       });
+
+
+      scope.$watch('circle', function(newVal, oldVal){
+        if (newVal !== oldVal) {
+          //console.log('circle : ' + JSON.stringify(newVal));
+          //scope.redrawChart(element[0], newVal, config);
+          scope.redrawCircle(element[0], newVal);
+        }
+      });
+
     }
 
     return directive;

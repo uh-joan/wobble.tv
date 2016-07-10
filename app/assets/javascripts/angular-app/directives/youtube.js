@@ -30,7 +30,7 @@ angular.module('wobbleApp')
         $window.onYouTubeIframeAPIReady = function() {
           player = new YT.Player(element.children()[0], {
             playerVars: {
-              autoplay: 1,
+              autoplay: 0,
               html5: 1,
               theme: "light",
               modesbranding: 1,
@@ -45,6 +45,7 @@ angular.module('wobbleApp')
             videoId: scope.videoid,
 
             events: {
+              'onReady': onPlayerReady,
               'onStateChange': function(event) {
 
                 var message = {
@@ -78,6 +79,10 @@ angular.module('wobbleApp')
             }
           });
           //scope.$emit('get-time', {event: 'get-time', time: player.getCurrentTime()});
+        };
+
+        var onPlayerReady=function(){
+          scope.$emit('get-duration', {event: 'get-duration', time: player.getDuration()});
         };
 
         scope.$watch('height + width', function(newValue, oldValue) {
@@ -124,6 +129,10 @@ angular.module('wobbleApp')
         scope.$on(YT_event.GET_TIME, function(){
           scope.$emit('get-time', {event: 'get-time', time: player.getCurrentTime()});
         });
+
+        scope.$on(YT_event.GET_DURATION, function(){
+          scope.$emit('get-duration', {event: 'get-duration', time: player.getDuration()});
+        })
 
       }
     };
