@@ -12,7 +12,7 @@ class IntervalBuilder < Responsible::Base
   property :intervals
 
   def intervals
-    video.interval_values.map do |values|
+    video.interval_values.order(:end).map do |values|
       SingleIntervalBuilder.new(consumer, values)
     end
   end
