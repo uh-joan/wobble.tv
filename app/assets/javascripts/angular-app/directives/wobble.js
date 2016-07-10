@@ -85,9 +85,6 @@ angular.module('wobbleApp')
 
         svg.append("circle")
           .attr("class", "dot")
-          //.attr("cx", x(0))
-          //.attr("cy", y(0))
-          //.attr("r", 2)
           .fill('blue');
 
       };

@@ -98,8 +98,8 @@ angular.module('wobbleApp')
       voteService.query_all(vm.yt.videoid, vm.yt.duration.toString(), time_step).then(function(response){
           vm.sendControlEvent(vm.YT_event.PLAY);
         var vote;
-        angular.forEach(response.data, function(v){
-          vm.total_votes.push({votes: v.up-v.down, time: vm.toHHMMSS(v.time)});
+        angular.forEach(response.data.intervals, function(v){
+          vm.total_votes.push({votes: v.votes, time: vm.toHHMMSS(v.time)});
         });
         //console.log('total votes: ' + JSON.stringify(vm.total_votes));
       });

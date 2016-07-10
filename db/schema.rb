@@ -11,10 +11,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160704223341) do
+ActiveRecord::Schema.define(version: 20160710124507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "interval_values", force: :cascade do |t|
+    t.integer  "video_id"
+    t.string   "action"
+    t.float    "start"
+    t.float    "end"
+    t.integer  "votes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "interval_values", ["video_id"], name: "index_interval_values_on_video_id", using: :btree
+
+  create_table "queued_events", force: :cascade do |t|
+    t.string   "event_type"
+    t.integer  "caller_id"
+    t.string   "caller_type"
+    t.datetime "scheduled_for"
+    t.text     "additional_data"
+    t.datetime "processed_at"
+    t.integer  "processed_with"
+    t.string   "status"
+    t.integer  "retry_count",     default: 0
+    t.text     "error_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "queued_events", ["caller_id", "caller_type"], name: "index_queued_events_on_caller_id_and_caller_type", using: :btree
+  add_index "queued_events", ["event_type"], name: "index_queued_events_on_event_type", using: :btree
+  add_index "queued_events", ["status"], name: "index_queued_events_on_status", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -44,7 +75,10 @@ ActiveRecord::Schema.define(version: 20160704223341) do
     t.string   "youtube_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "duration"
   end
+
+  add_index "videos", ["youtube_id"], name: "index_videos_on_youtube_id", using: :btree
 
   create_table "votes", force: :cascade do |t|
     t.string   "video_id"

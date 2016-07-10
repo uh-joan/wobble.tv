@@ -1,3 +1,5 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
   resources :votes, defaults: {format: 'json'}, only: [:create, :amount]
   resources :videos, defaults: {format: 'json'}, only: [:index]
@@ -10,6 +12,8 @@ Rails.application.routes.draw do
   resources :users
 
   get 'amount/:video_id/:time_step/:time', defaults: {format: 'json'}, to: 'votes#amount'
-  get 'all_amount/:video_id/:time_step/:total_time', defaults: {format: 'json'}, to: 'votes#all_amount'
+  # get 'all_amount/:video_id/:time_step/:total_time', defaults: {format: 'json'}, to: 'votes#all_amount'
+  get 'all_amount/:video_id', defaults: {format: 'json'}, to: 'votes#all_amount'
 
+  mount Resque::Server.new, at: '/resque'
 end

@@ -1,0 +1,4 @@
+calculate_votes_by_intervals:
+  class: "Interval::CalculateVotesByInterval"
+  queue: interval_value
+  description: "This calculate votes by interval when there is a new vote."

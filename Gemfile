@@ -7,18 +7,23 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'jquery-rails'
 gem 'turbolinks'
 gem 'jbuilder', '~> 2.0'
-group :development, :test do
-  gem 'byebug'
-end
+
 group :development do
   gem 'web-console', '~> 2.0'
   gem 'spring'
 end
+
 gem 'bootstrap-sass'
 gem 'devise'
 gem 'high_voltage'
 gem 'pg'
 gem 'upmin-admin'
+
+gem 'resque'
+gem 'resque-scheduler'
+gem 'resque-retry'
+gem 'airbrake'
+
 group :development do
   gem 'foreman'
   gem 'rails_layout'
@@ -33,3 +38,5 @@ gem 'angular-rails-templates'
 # d3 visualisation
 gem 'd3-rails'
 gem 'd3-tip-rails'
+
+gem 'responsible' # json builder

@@ -28,6 +28,10 @@ class VotesController < ApplicationController
     # @vote = Vote.new(vote_params)
 
     vote = current_user.votes.create!(vote_params)
+    video = Video.find_by_youtube_id(vote.video_id)
+    p "enqueuing votes by interval for video: #{video.youtube_id}"
+    EventFactory::calculate_votes_by_intervals(video)
+
     render json: {data: vote}
     # respond_to do |format|
     #   if @vote.save
@@ -50,20 +54,17 @@ class VotesController < ApplicationController
   end
 
   def all_amount
-    total_time = params[:total_time].to_f
-    time_step = params[:time_step].to_f
-    initial_time = 0.0
-    time = time_step
-    votes = Vote.where("video_id = ?", params[:video_id])
-    total_votes = []
-    while initial_time<total_time do
-      votes_positive_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='up'", initial_time, time).count()
-      votes_negative_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='down'", initial_time, time).count()
-      total_votes << {up: votes_positive_count, down: votes_negative_count, time: time}
-      initial_time = initial_time + time_step
-      time = time + time_step
-    end
-    render json: {data: total_votes }
+    video = Video.find_by_youtube_id(params[:video_id])
+    # interval_values = video.interval_values.all
+
+    # p "count : #{interval_values.count}"
+
+    render json: ResponseBuilder.new(
+               Responsible::Consumer.new,
+               IntervalBuilder,
+               video
+           )
+
   end
 
   # PATCH/PUT /votes/1

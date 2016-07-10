@@ -35,7 +35,7 @@ angular.module('wobbleApp')
     vm.query_all = function(videoId, total_time, time_step){
       var deferred = $q.defer();
 
-      $http.get('/all_amount/'+videoId+'/'+time_step+'/'+total_time).then(function(response){
+      $http.get('/all_amount/'+videoId).then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);
