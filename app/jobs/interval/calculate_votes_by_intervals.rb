@@ -22,17 +22,29 @@ module Interval
       time_step = 3.0
       initial_time = 0.0
       time = time_step
+
+      interval_values = @video.interval_values
       votes = Vote.where("video_id = ?", @video.youtube_id)
-      # total_votes = []
-      while initial_time < total_time do
-        votes_positive_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='up'", initial_time, time).count()
-        # video.interval_values.create!(action: 'up', start: initial_time, end: time, votes: votes_positive_count)
-        votes_negative_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='down'", initial_time, time).count()
-        video.interval_values.create!(action: 'up/down', start: initial_time, end: time, votes: votes_positive_count-votes_negative_count)
-        # total_votes << {up: votes_positive_count, down: votes_negative_count, time: time}
-        initial_time = initial_time + time_step
-        time = time + time_step
+
+      if (interval_values.count > 0)
+        interval_values.each do |v|
+          votes_positive_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='up'", v.start, v.end).count()
+          votes_negative_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='down'", v.start, v.end).count()
+          v.update_attributes!(votes: votes_positive_count-votes_negative_count)
+        end
+      else
+        # total_votes = []
+        while initial_time < total_time do
+          votes_positive_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='up'", initial_time, time).count()
+          votes_negative_count = votes.where("vote_stamp >= ? AND vote_stamp < ? AND action='down'", initial_time, time).count()
+          video.interval_values.create!(action: 'up/down', start: initial_time, end: time, votes: votes_positive_count-votes_negative_count)
+          # total_votes << {up: votes_positive_count, down: votes_negative_count, time: time}
+          initial_time = initial_time + time_step
+          time = time + time_step
+        end
       end
+
+
       # render json: {data: total_votes }
     end
 
