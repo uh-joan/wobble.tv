@@ -108,6 +108,7 @@ angular.module('wobbleApp')
 
       voteService.query_all(vm.yt.videoid, vm.yt.duration.toString(), time_step).then(function(response){
           vm.sendControlEvent(vm.YT_event.PLAY);
+        vm.total_votes=[];
         var vote;
         angular.forEach(response.data.intervals, function(v){
           vm.total_votes.push({votes: v.votes, time: vm.toHHMMSS(v.time), time_sec: v.time});
@@ -138,9 +139,8 @@ angular.module('wobbleApp')
         vm.disableVote=false;
       }, 1000);
       vm.yt.voteStatus = data;
-      if (vm.total_votes.length>0){
-        addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
-      }
+      console.log(vm.total_votes.length);
+      
       //console.log('Vote :' + vm.yt.voteStatus.action + ' at ' + vm.yt.voteStatus.time);
       voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
         .then(function(response){
@@ -148,6 +148,8 @@ angular.module('wobbleApp')
       }, function(e){
         //console.log(JSON.stringify(e));
       });
+
+      addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
     });
 
       var addVoteToTotalVotes = function(time, action){
