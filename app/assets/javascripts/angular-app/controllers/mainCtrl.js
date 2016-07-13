@@ -138,11 +138,10 @@ angular.module('wobbleApp')
         vm.disableVote=false;
       }, 1000);
       vm.yt.voteStatus = data;
-    //  Vote {{vm.yt.voteStatus.action}} at {{vm.yt.voteStatus.time}}
       addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
+      //console.log('Vote :' + vm.yt.voteStatus.action + ' at ' + vm.yt.voteStatus.time);
       voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
         .then(function(response){
-
         //console.log(JSON.stringify(response));
       }, function(e){
         //console.log(JSON.stringify(e));
@@ -153,8 +152,9 @@ angular.module('wobbleApp')
         var value=(action=='up')? 1:-1;
 
         var index=getIntervalIndex(time);
-        var num_votes = vm.total_votes_copy[index-2].votes;
         //console.log('index: '+index + ' value: ' +JSON.stringify(vm.total_votes_copy[index-2]));
+        //
+        var num_votes = vm.total_votes_copy[index-2].votes;
         //console.log('circle: ' + JSON.stringify(vm.circle));
         vm.total_votes_copy[index-2].votes=num_votes+value;
         vm.circle.votes=vm.circle.votes+value;
@@ -204,11 +204,11 @@ angular.module('wobbleApp')
 
       vm.min = function(data){
         return d3.min(data, function(d) { return d.votes; })
-      }
+      };
 
       vm.max = function(data){
         return d3.max(data, function(d) { return d.votes; })
-      }
+      };
 
   }
   ]);
