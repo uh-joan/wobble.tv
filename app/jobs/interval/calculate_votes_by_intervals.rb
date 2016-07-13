@@ -19,7 +19,7 @@ module Interval
 
     def perform
       total_time = @video.duration
-      time_step = 3.0
+      time_step = 1.0
       initial_time = 0.0
       time = time_step
 

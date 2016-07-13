@@ -23,6 +23,10 @@ angular.module('wobbleApp')
       if (seconds < 10) {seconds = "0"+seconds;}
       return hours+':'+minutes+':'+seconds;
     };
+    vm.disableVote=false;
+
+      // even number please
+      var window_size = 20;
 
     vm.data = [{votes:0, time:'00:00:00'}];
     //vm.tempData = [];
@@ -37,6 +41,7 @@ angular.module('wobbleApp')
       duration: 0
     };
       vm.total_votes=[];
+      vm.total_votes_copy=[];
 
     vm.YT_event = YT_event;
 
@@ -69,13 +74,19 @@ angular.module('wobbleApp')
       //  console.log('time: ' + newVal);
         voteService.query(vm.yt.videoid, newVal.toString(), time_step).then(function(response){
           vm.yt.votes = response.data;
-          var v = {votes: vm.yt.votes.up-vm.yt.votes.down, time: vm.toHHMMSS(newVal+parseFloat(time_step))};
+          var v = {
+            votes: vm.yt.votes.up-vm.yt.votes.down,
+            time: vm.toHHMMSS(newVal+parseFloat(time_step)),
+            time_sec: newVal+time_step
+          };
           //console.log(JSON.stringify(v));
             //vm.data.push(v);
             vm.circle = v;
           //console.log('data in watch: ' + JSON.stringify(vm.data));
           //console.log('at interval ' + newVal + 'sec. to ' + (newVal+3) + 'sec., votes ' + response.data);
           //vm.yt.time = vm.yt.time + vm.yt.time_step;
+
+          trimTotalVotes(window_size, newVal+parseFloat(time_step));
         });
       }
     });
@@ -99,8 +110,9 @@ angular.module('wobbleApp')
           vm.sendControlEvent(vm.YT_event.PLAY);
         var vote;
         angular.forEach(response.data.intervals, function(v){
-          vm.total_votes.push({votes: v.votes, time: vm.toHHMMSS(v.time)});
+          vm.total_votes.push({votes: v.votes, time: vm.toHHMMSS(v.time), time_sec: v.time});
         });
+        vm.total_votes_copy=vm.total_votes;
         //console.log('total votes: ' + JSON.stringify(vm.total_votes));
       });
 
@@ -121,16 +133,82 @@ angular.module('wobbleApp')
     });
 
     $scope.$on('update-vote', function(event, data) {
+      vm.disableVote = true;
+      setTimeout(function(){
+        vm.disableVote=false;
+      }, 1000);
       vm.yt.voteStatus = data;
     //  Vote {{vm.yt.voteStatus.action}} at {{vm.yt.voteStatus.time}}
-      voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time, action: vm.yt.voteStatus.action})
+      addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
+      voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
         .then(function(response){
+
         //console.log(JSON.stringify(response));
       }, function(e){
         //console.log(JSON.stringify(e));
       });
     });
 
+      var addVoteToTotalVotes = function(time, action){
+        var value=(action=='up')? 1:-1;
+
+        var index=getIntervalIndex(time);
+        var num_votes = vm.total_votes_copy[index-2].votes;
+        //console.log('index: '+index + ' value: ' +JSON.stringify(vm.total_votes_copy[index-2]));
+        //console.log('circle: ' + JSON.stringify(vm.circle));
+        vm.total_votes_copy[index-2].votes=num_votes+value;
+        vm.circle.votes=vm.circle.votes+value;
+      };
+
+      var getIntervalIndex=function(time){
+        var initial_time = 0.0;
+        var final_time, index=0, found=false;
+        angular.forEach(vm.total_votes_copy, function(vote){
+          if (found!== true){
+            final_time=parseFloat(vote.time_sec);
+            //console.log('from: ' + initial_time + ' to: '+final_time);
+            if (time>initial_time && time<=final_time){
+              found=true;
+            }
+            initial_time = final_time;
+            final_time=final_time+final_time;
+            index=index+1;
+          }
+        });
+        return index;
+      };
+
+      var trimTotalVotes = function(sec, actual_time){
+        //console.log('time: '+actual_time);
+
+        // ************
+        // Make the windown to show less of the future time with this line
+        // ************
+        // now shows sec times in the future
+        var half_window = sec/2;
+        var index = getIntervalIndex(actual_time)+half_window;
+        //console.log('index: ' + index);
+        //index = (index>2) ? index-2:index;
+        var new_total_votes = [];
+        var i=0;
+        while(index>0){
+          if (i>actual_time-half_window){
+            new_total_votes.push(vm.total_votes_copy[i]);
+          }
+          index--;
+          i++;
+        }
+        //console.log('new total votes: ' + JSON.stringify(new_total_votes));
+        vm.total_votes = new_total_votes;
+      };
+
+      vm.min = function(data){
+        return d3.min(data, function(d) { return d.votes; })
+      }
+
+      vm.max = function(data){
+        return d3.max(data, function(d) { return d.votes; })
+      }
 
   }
   ]);

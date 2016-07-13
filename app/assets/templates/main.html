@@ -1,9 +1,22 @@
 
 <div class="row marketing">
+    <!--<div class="row">-->
+        <!--<div class="col-xs-10 col-xs-offset-1">-->
+            <!--&lt;!&ndash;<span>{{vm.data | json}}</span>&ndash;&gt;-->
+            <!--<wobble width="{{vm.yt.width+70}}" height="{{vm.yt.height+60}}" data="{{vm.total_votes}}" circle="{{vm.circle}}"></wobble>-->
+            <!--&lt;!&ndash;<area-chart class="area-chart" chart-data="vm.data"></area-chart>&ndash;&gt;-->
+
+        <!--</div>-->
+    <!--</div>-->
+
     <div class="row">
         <div class="col-xs-10 col-xs-offset-1">
             <!--<span>{{vm.data | json}}</span>-->
-            <wobble width="{{vm.yt.width+70}}" height="{{vm.yt.height+60}}" data="{{vm.total_votes}}" circle="{{vm.circle}}"></wobble>
+            <small-wobble width="{{vm.yt.width+70}}" height="{{vm.yt.height+60}}"
+                          data="{{vm.total_votes}}" circle="{{vm.circle}}"
+                          min="{{vm.min(vm.total_votes_copy)}}"
+                          max="{{vm.max(vm.total_votes_copy)}}"
+                    ></small-wobble>
             <!--<area-chart class="area-chart" chart-data="vm.data"></area-chart>-->
 
         </div>
@@ -11,10 +24,12 @@
 
     <div class="row">
         <div class="col-xs-10 col-xs-offset-1">
-            <button class="btn btn-success" ng-click="vm.sendControlEvent(vm.YT_event.VOTE_UP)">
+            <button class="btn btn-success" ng-click="vm.sendControlEvent(vm.YT_event.VOTE_UP)"
+                    ng-disabled="vm.disableVote">
                 <span class="glyphicon glyphicon-thumbs-up"></span>
             </button>
-            <button class="btn btn-danger" ng-click="vm.sendControlEvent(vm.YT_event.VOTE_DOWN)">
+            <button class="btn btn-danger" ng-click="vm.sendControlEvent(vm.YT_event.VOTE_DOWN)"
+                    ng-disabled="vm.disableVote">
                 <span class="glyphicon glyphicon-thumbs-down"></span>
             </button>
             <!--<span ng-if="vm.yt.voteStatus.action"> Vote {{vm.yt.voteStatus.action}} at {{vm.yt.voteStatus.time}}</span>-->
@@ -41,13 +56,13 @@
 
         <!--</div>-->
     <!--</div>-->
-    <div class="row">
-        <div class="col-xs-10 col-xs-offset-1">
+    <!--<div class="row">-->
+        <!--<div class="col-xs-10 col-xs-offset-1">-->
             <!--Width:<input type="text" ng-model="vm.yt.width">-->
             <!--Height:<input type="text" ng-model="vm.yt.height">-->
-            Videoid:<input type="text" ng-model="vm.yt.videoid">
-        </div>
-    </div>
+            <!--Videoid:<input type="text" ng-model="vm.yt.videoid">-->
+        <!--</div>-->
+    <!--</div>-->
 
     <!--<div class="row">-->
         <!--<div class="col-xs-10 col-xs-offset-1">-->
