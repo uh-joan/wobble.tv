@@ -138,7 +138,9 @@ angular.module('wobbleApp')
         vm.disableVote=false;
       }, 1000);
       vm.yt.voteStatus = data;
-      addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
+      if (vm.total_votes.length>0){
+        addVoteToTotalVotes(vm.yt.voteStatus.time, vm.yt.voteStatus.action);
+      }
       //console.log('Vote :' + vm.yt.voteStatus.action + ' at ' + vm.yt.voteStatus.time);
       voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
         .then(function(response){
