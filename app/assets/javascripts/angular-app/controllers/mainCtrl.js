@@ -26,7 +26,7 @@ angular.module('wobbleApp')
     vm.disableVote=false;
 
       // even number please
-      var window_size = 20;
+      var window_size = 15;
 
     vm.data = [{votes:0, time:'00:00:00'}];
     //vm.tempData = [];
@@ -140,7 +140,7 @@ angular.module('wobbleApp')
       }, 1000);
       vm.yt.voteStatus = data;
       console.log(vm.total_votes.length);
-      
+
       //console.log('Vote :' + vm.yt.voteStatus.action + ' at ' + vm.yt.voteStatus.time);
       voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
         .then(function(response){
@@ -186,11 +186,11 @@ angular.module('wobbleApp')
         //console.log('time: '+actual_time);
 
         // ************
-        // Make the windown to show less of the future time with this line
+        // Make the window to show less of the future time with this line
         // ************
         // now shows sec times in the future
-        var half_window = sec/2;
-        var index = getIntervalIndex(actual_time)+half_window;
+        var half_window = sec;
+        var index = getIntervalIndex(actual_time)-1;
         //console.log('index: ' + index);
         //index = (index>2) ? index-2:index;
         var new_total_votes = [];
