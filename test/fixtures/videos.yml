@@ -2,6 +2,8 @@
 
 one:
   youtube_id: MyString
+  duration: 1
 
 two:
   youtube_id: MyString
+  duration: 1

@@ -2,10 +2,10 @@
 
 /**
  * @ngdoc service
- * @name apiCakeApp.apiService
+ * @name apiCakeApp.voteService
  * @description
- * # apiService
- * Service in the apiCakeApp.
+ * # voteService
+ * Service in the wobbleApp.
  */
 angular.module('wobbleApp')
   .service('voteService', ['$http', '$q', 'domain', function ($http, $q, domain) {

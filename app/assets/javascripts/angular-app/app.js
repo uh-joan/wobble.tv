@@ -35,11 +35,21 @@ angular
   .value('domain','https://fullsocialwobble.herokuapp.com')
   //.value('domain','http://wobble.tv')
   .config(function ($routeProvider, $stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/main');
+    $urlRouterProvider.otherwise('/init');
     //
     // Now set up the states
     $stateProvider
-      .state('main', {
+      .state('init', {
+        url: '/init',
+        views: {
+          '': {
+            templateUrl: 'init.html',
+            controller: 'initCtrl',
+            controllerAs: 'vm'
+          }
+        }
+      })
+      .state('init.main', {
         url: '/main',
         views: {
           '': {
