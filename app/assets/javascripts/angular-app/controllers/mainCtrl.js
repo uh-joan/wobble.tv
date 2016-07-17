@@ -31,8 +31,8 @@ angular.module('wobbleApp')
     vm.data = [{votes:0, time:'00:00:00'}];
     //vm.tempData = [];
     vm.yt = {
-      width: 480,
-      height: 320,
+      width: 640,
+      height: 360,
       videoid: "EO_nBlAT19Y",
       playerStatus: "PLAYING",
       voteStatus : {},
@@ -70,7 +70,7 @@ angular.module('wobbleApp')
 
     $scope.$watch(function(){return vm.yt.time;}, function(newVal, oldVal){
       //console.log('time has changed');
-      if(newVal!=oldVal){
+      if(newVal!=oldVal && newVal!=0){
       //  console.log('time: ' + newVal);
         voteService.query(vm.yt.videoid, newVal.toString(), time_step).then(function(response){
           vm.yt.votes = response.data;
@@ -107,7 +107,6 @@ angular.module('wobbleApp')
       //vm.sendControlEvent(vm.YT_event.PLAY);
 
       voteService.query_all(vm.yt.videoid, vm.yt.duration.toString(), time_step).then(function(response){
-          vm.sendControlEvent(vm.YT_event.PLAY);
         vm.total_votes=[];
         var vote;
         angular.forEach(response.data.intervals, function(v){
@@ -115,6 +114,11 @@ angular.module('wobbleApp')
         });
         vm.total_votes_copy=vm.total_votes;
         //console.log('total votes: ' + JSON.stringify(vm.total_votes));
+
+        setTimeout(function(){
+          vm.sendControlEvent(vm.YT_event.PLAY);
+        }, 500)
+
       });
 
     });
@@ -130,6 +134,7 @@ angular.module('wobbleApp')
     });
 
     $scope.$on('pause-video', function(event){
+      console.log('pause');
       clearInterval(vm.intervalId);
     });
 
@@ -139,7 +144,7 @@ angular.module('wobbleApp')
         vm.disableVote=false;
       }, 1000);
       vm.yt.voteStatus = data;
-      console.log(vm.total_votes.length);
+      //console.log(vm.total_votes.length);
 
       //console.log('Vote :' + vm.yt.voteStatus.action + ' at ' + vm.yt.voteStatus.time);
       voteService.createVote({video_id: vm.yt.videoid, vote_stamp: vm.yt.voteStatus.time-1, action: vm.yt.voteStatus.action})
@@ -213,6 +218,27 @@ angular.module('wobbleApp')
       vm.max = function(data){
         return d3.max(data, function(d) { return d.votes; })
       };
+
+      $scope.$on('load-new-video', function(event, data){
+        vm.sendControlEvent(vm.YT_event.STOP);
+        setTimeout(function(){
+          //clearInterval(vm.intervalId);
+          vm.yt = {
+            width: 640,
+            height: 360,
+            videoid: data.video_id,
+            playerStatus: "PLAYING",
+            voteStatus : {},
+            time: 0,
+            votes: 0,
+            duration: 0
+          };
+          vm.total_votes=[];
+          vm.total_votes_copy=[];
+          vm.sendControlEvent(vm.YT_event.GET_DURATION);
+        },1000);
+
+      })
 
   }
   ]);

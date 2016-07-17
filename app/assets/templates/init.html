@@ -1,5 +1,28 @@
-<div style="margin-top:10px;">
-    sidebar
+<div class="row">
+    <div class="col-xs-4">
+        <div class="sidebar">
+            <div ng-repeat="video in vm.videos"
+                 ng-click="vm.goToVideo(video)" class="video-item">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                        <div style="width: 150px; height: 100px;">
+                            <img src="http://img.youtube.com/vi/{{video.youtube_id}}/default.jpg">
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-6" style="padding-left:0;">
+                        <div class="video-title">
+                            {{video.title}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xs-8 col-xs-offset-4">
+        <div ui-view></div>
+    </div>
 </div>
 
-<div ui-view></div>
+
+

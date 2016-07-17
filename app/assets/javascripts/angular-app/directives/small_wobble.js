@@ -206,7 +206,7 @@ angular.module('wobbleApp')
       scope.$watch('circle', function(newVal, oldVal){
 
         if (newVal !== oldVal && newVal.length>0) {
-          console.log(newVal);
+          //console.log(newVal);
           //console.log('circle : ' + JSON.stringify(newVal));
           //scope.redrawChart(element[0], newVal, config);
           scope.redrawCircle(element[0], newVal);
