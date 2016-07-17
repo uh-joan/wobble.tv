@@ -16,18 +16,16 @@ angular.module('wobbleApp')
 
       var videos_length = vm.videos.length;
       angular.forEach(vm.videos, function(video){
-        var url = 'http://www.apicake.io/bake/janisaez/youtube?id='+video.youtube_id;
+        var url = 'https://www.googleapis.com/youtube/v3/videos?key=AIzaSyBUvDNDd8KTf1KH9kLabpSUFgR_Cvl3XT0&part=snippet&id='+video.youtube_id;
         //console.log(JSON.stringify(video) + ' url: ' + url);
-        setTimeout(function(){
-          $http.get(url).then(function(response){
-            //console.log(JSON.stringify(response));
-            //console.log('video_id: ' + video.youtube_id + ' title: ' + response.data.title);
-            var index = vm.videos.map(function(v) { return v.youtube_id; }).indexOf(video.youtube_id);
-            vm.videos[index].title=response.data.title;
-          }, function(e){
-            console.log(e);
-          });
-        }, 100);
+        $http.get(url).then(function(response){
+          //console.log(JSON.stringify(response));
+          //console.log('video_id: ' + video.youtube_id + ' title: ' + response.data.title);
+          var index = vm.videos.map(function(v) { return v.youtube_id; }).indexOf(video.youtube_id);
+          vm.videos[index].title=response.data.items[0].snippet.title;
+        }, function(e){
+          console.log(e);
+        });
 
       });
 

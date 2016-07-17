@@ -8,10 +8,11 @@
  * Controller of the wobbleApp
  */
 angular.module('wobbleApp')
-  .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout', 'time_step',
-    function ($scope, YT_event, voteService, $timeout, time_step) {
+  .controller('mainCtrl', [ '$scope', 'YT_event', 'voteService', '$timeout', 'time_step', '$interval',
+    function ($scope, YT_event, voteService, $timeout, time_step, $interval) {
     var vm = this;
 
+    var intervalId;
     vm.toHHMMSS = function (sec_num) {
       //var sec_num = parseInt(this, 10); // don't forget the second param
       var hours   = Math.floor(sec_num / 3600);
@@ -34,7 +35,7 @@ angular.module('wobbleApp')
       width: 640,
       height: 360,
       videoid: "EO_nBlAT19Y",
-      playerStatus: "PLAYING",
+      playerStatus: "NOT PLAYING",
       voteStatus : {},
       time: 0,
       votes: 0,
@@ -52,28 +53,45 @@ angular.module('wobbleApp')
 
       $scope.$on('update-message', function(event, data) {
       //console.log('data: ' + JSON.stringify(data));
-      vm.yt.playerStatus = data.data;
+        if (data.data!==''){
+          vm.yt.playerStatus = data.data;
+        }
     });
 
     vm.startInterval = function(){
-      vm.intervalId = setInterval(function(){
+      if (angular.isDefined(intervalId)) return;
+
+      intervalId = $interval(function() {
         //console.log(' tick');
         vm.sendControlEvent(vm.YT_event.GET_TIME);
       },parseFloat(time_step)*1000);
+      //vm.intervalId = setInterval(function(){
+      //  console.log(' tick');
+      //  console.log(' in tick, status: ' + vm.yt.playerStatus);
+      //  vm.sendControlEvent(vm.YT_event.GET_TIME);
+      //},parseFloat(time_step)*1000);
     };
+
+      vm.stopInterval = function(){
+        if (angular.isDefined(intervalId)) {
+          $interval.cancel(intervalId);
+          intervalId = undefined;
+        }
+      };
 
     $scope.$on('get-time', function(event, data){
       //console.log('scope on get time ' + data.time);
       vm.yt.time = data.time;
-      $scope.$apply(vm.yt.time);
+      //$scope.$apply(vm.yt.time);
     });
 
     $scope.$watch(function(){return vm.yt.time;}, function(newVal, oldVal){
       //console.log('time has changed');
-      if(newVal!=oldVal && newVal!=0){
+      if(newVal!=oldVal && newVal>0.99){
       //  console.log('time: ' + newVal);
         voteService.query(vm.yt.videoid, newVal.toString(), time_step).then(function(response){
           vm.yt.votes = response.data;
+
           var v = {
             votes: vm.yt.votes.up-vm.yt.votes.down,
             time: vm.toHHMMSS(newVal+parseFloat(time_step)),
@@ -115,27 +133,38 @@ angular.module('wobbleApp')
         vm.total_votes_copy=vm.total_votes;
         //console.log('total votes: ' + JSON.stringify(vm.total_votes));
 
-        setTimeout(function(){
-          vm.sendControlEvent(vm.YT_event.PLAY);
-        }, 500)
-
+        //console.log(' in get duration, status: ' + vm.yt.playerStatus);
+        if (vm.yt.playerStatus!== 'PLAYING'){
+          setTimeout(function(){
+            vm.sendControlEvent(vm.YT_event.PLAY);
+          }, 500)
+        }
       });
-
     });
 
     $scope.$on('stop-video', function(event){
-      clearInterval(vm.intervalId);
+      console.log('stop');
+      if (vm.yt.playerStatus === 'PLAYING') {
+        //clearInterval(vm.intervalId);
+        vm.stopInterval();
+      }
+
     });
 
     $scope.$on('play-video', function(event){
+      //console.log('on play video: ' + JSON.stringify(vm.yt));
       if (vm.yt.playerStatus !== 'PLAYING') {
         vm.startInterval();
       }
     });
 
     $scope.$on('pause-video', function(event){
-      console.log('pause');
-      clearInterval(vm.intervalId);
+      //console.log('pause');
+      //console.log('id: ' +JSON.stringify(vm.intervalId));
+      if (vm.yt.playerStatus === 'PLAYING') {
+        //clearInterval(vm.intervalId);
+        vm.stopInterval();
+      }
     });
 
     $scope.$on('update-vote', function(event, data) {
@@ -220,21 +249,26 @@ angular.module('wobbleApp')
       };
 
       $scope.$on('load-new-video', function(event, data){
-        vm.sendControlEvent(vm.YT_event.STOP);
+        //vm.sendControlEvent(vm.YT_event.STOP);
+        //clearInterval(vm.intervalId);
+        vm.stopInterval();
+        vm.yt = {
+          width: 640,
+          height: 360,
+          videoid: data.video_id,
+          playerStatus: "NOT PLAYING",
+          voteStatus : {},
+          time: 0,
+          votes: 0,
+          duration: 0
+        };
+        vm.total_votes=[];
+        vm.total_votes_copy=[];
+
+        //$scope.$apply(vm.yt);
         setTimeout(function(){
           //clearInterval(vm.intervalId);
-          vm.yt = {
-            width: 640,
-            height: 360,
-            videoid: data.video_id,
-            playerStatus: "PLAYING",
-            voteStatus : {},
-            time: 0,
-            votes: 0,
-            duration: 0
-          };
-          vm.total_votes=[];
-          vm.total_votes_copy=[];
+          //vm.data = [{votes:0, time:'00:00:00'}];
           vm.sendControlEvent(vm.YT_event.GET_DURATION);
         },1000);
 
