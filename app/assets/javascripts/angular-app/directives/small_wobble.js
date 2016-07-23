@@ -29,7 +29,7 @@ angular.module('wobbleApp')
 
         // Define the axes
         xAxis = d3.svg.axis().scale(x)
-          .orient("bottom").ticks(4).tickFormat(d3.time.format("%M:%S"));
+          .orient("bottom").ticks(4).tickSubdivide(true).tickFormat(d3.time.format("%M:%S"));
 
         yAxis = d3.svg.axis().scale(y)
           .orient("left").ticks(5);
@@ -131,7 +131,7 @@ angular.module('wobbleApp')
           .duration(0)
           .attr("cx", x(0))
           .attr("cy", y(0))
-          .attr("r", 6);
+          .attr("r", 4);
 
       };
 

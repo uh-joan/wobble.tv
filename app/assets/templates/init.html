@@ -1,4 +1,7 @@
 <div class="row">
+    <div class="col-xs-8">
+        <div ui-view></div>
+    </div>
     <div class="col-xs-4">
         <div class="sidebar">
             <div ng-repeat="video in vm.videos"
@@ -19,9 +22,7 @@
         </div>
     </div>
 
-    <div class="col-xs-8 col-xs-offset-4">
-        <div ui-view></div>
-    </div>
+
 </div>
 
 
