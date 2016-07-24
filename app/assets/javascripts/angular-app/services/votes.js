@@ -37,7 +37,7 @@ angular.module('wobbleApp')
       return deferred.promise;
     };
   //  all_amount/:video_id/:time_step/:total_time
-    vm.query_all = function(videoId, total_time, time_step){
+    vm.query_all = function(videoId){
       var deferred = $q.defer();
 
       $http.get('/all_amount/'+videoId).then(function(response){

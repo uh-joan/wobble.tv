@@ -5,14 +5,21 @@
     <div class="col-xs-4">
         <div class="sidebar">
             <div ng-repeat="video in vm.videos"
-                 ng-click="vm.goToVideo(video)" class="video-item">
+                 ng-click="vm.goToVideo(video)" class="video-item" style="margin-right: 2px;">
                 <div class="row">
                     <div class="col-xs-12 col-sm-6">
                         <div style="width: 150px; height: 100px;">
                             <img src="http://img.youtube.com/vi/{{video.youtube_id}}/default.jpg">
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6" style="padding-left:0;">
+                    <div class="col-xs-12 col-sm-6" style="padding-left:0;margin-top:20px;">
+                        <thumb-wobble width="150" height="100" data="{{video.data}}">
+                        </thumb-wobble>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12" style="margin: 0px 0px 15px 30px;
+                    padding: 0 50px 15px 0;border-bottom: 1px solid black;">
                         <div class="video-title">
                             {{video.title}}
                         </div>
@@ -21,8 +28,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 
