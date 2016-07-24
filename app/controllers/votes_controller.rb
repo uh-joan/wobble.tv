@@ -5,7 +5,7 @@ class VotesController < ApplicationController
   # GET /votes
   # GET /votes.json
   def index
-    @votes = Vote.all
+    # @votes = Vote.all
   end
 
   # GET /votes/1
@@ -47,10 +47,11 @@ class VotesController < ApplicationController
   end
 
   def amount
-    votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
-    votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
+    # votes_positive_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
+    # votes_negative_count = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", params[:video_id], params[:time].to_f, params[:time].to_f+params[:time_step].to_f).count()
 
-    render json: {data: {up: votes_positive_count, down: votes_negative_count} }
+    calculate_votes(params[:time].to_f, params[:time].to_f+params[:time_step].to_f, params[:video_id])
+    render json: {data: {up: @votes_positive_count, down: @votes_negative_count} }
   end
 
   def all_amount
@@ -101,4 +102,50 @@ class VotesController < ApplicationController
     def vote_params
       params.require(:vote).permit(:video_id, :user_id, :vote_stamp, :action)
     end
+
+  def calculate_votes(initial_time, time, videoId)
+    all_up_votes = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='up'", videoId, initial_time, time)
+    up_votes_sorted = all_up_votes.order('created_at DESC')
+    up_user_ids = up_votes_sorted.map(&:user_id).uniq
+
+    up_votes=[]
+    up_user_ids.each do |u_id|
+      up_votes << up_votes_sorted.map{|a| (a[:user_id]==u_id) ? a:nil}.compact.first
+    end
+
+    all_down_votes = Vote.where("video_id = ? AND vote_stamp >= ? AND vote_stamp < ? AND action='down'", videoId, initial_time, time)
+    down_votes_sorted = all_down_votes.order('created_at DESC')
+    down_user_ids = down_votes_sorted.map(&:user_id).uniq
+
+    down_votes=[]
+    down_user_ids.each do |u_id|
+      down_votes << down_votes_sorted.map{|a| (a[:user_id]==u_id) ? a:nil}.compact.first
+    end
+
+    final_up_votes =[]
+    final_down_votes =[]
+    up_votes.each do |u_vote|
+      d_vote = down_votes.map{|a| (a[:user_id]==u_vote.user_id) ? a:nil}.compact.first
+      unless d_vote.nil?
+        if d_vote.created_at < u_vote.created_at
+          final_up_votes << u_vote
+        else
+          final_down_votes << d_vote
+        end
+      else
+        final_up_votes << u_vote
+      end
+    end
+
+    down_votes.each do |d_vote|
+      u_vote = final_up_votes.map{|a| (a[:user_id]==d_vote.user_id) ? a:nil}.compact.first
+      if u_vote.nil?
+        already_there = final_down_votes.map{|a| (a[:user_id]==d_vote.user_id) ? a:nil}.compact.first
+        final_down_votes << d_vote if already_there.nil?
+      end
+    end
+
+    @votes_positive_count = final_up_votes.count
+    @votes_negative_count = final_down_votes.count
+  end
 end

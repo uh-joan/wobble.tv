@@ -109,8 +109,6 @@ angular.module('wobbleApp')
       }
     });
 
-
-
       //$scope.$watch(function(){return vm.yt.duration;}, function(newVal, oldVal){
       //  if(newVal!=oldVal){
       //    console.log('duration: ' + newVal);
@@ -132,6 +130,10 @@ angular.module('wobbleApp')
         });
         vm.total_votes_copy=vm.total_votes;
         //console.log('total votes: ' + JSON.stringify(vm.total_votes));
+        // *****
+        // hide the full graph at the beginning
+        // *****
+        trimTotalVotes(window_size, '2');
 
         //console.log(' in get duration, status: ' + vm.yt.playerStatus);
         if (vm.yt.playerStatus!== 'PLAYING'){

@@ -18,7 +18,7 @@ angular.module('wobbleApp')
     function link(scope, element, attrs) {
 
       var x, y, xAxis, yAxis, valueline, svg, width, height;
-      var margin = {top: 30, right: 20, bottom: 30, left: 50};
+      var margin = {top: 30, right: 20, bottom: 30, left: 40};
 
       var setChartParams=function(data, config){
         width = config.width - margin.left - margin.right;
@@ -61,7 +61,7 @@ angular.module('wobbleApp')
           .append("svg")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
-          .style("margin-left", "-50px")
+          //.style("margin-left", "-50px")
           .append("g").attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
