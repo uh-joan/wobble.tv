@@ -92,7 +92,8 @@ angular.module('wobbleApp')
           .append("text")
           .attr("transform", "rotate(-90)")
           .attr("y", 6)
-          .attr("dy", ".71em")
+          .attr("dy", "-2.9em")
+          .attr("dx", ".1em")
           .style("text-anchor", "end")
           .text("Vote count");
 
