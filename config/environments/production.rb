@@ -73,7 +73,6 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
-  host = 'wobble.tv'
   # config.action_mailer.smtp_settings = {
   #   address: "smtp.gmail.com",
   #   port: 587,
