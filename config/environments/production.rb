@@ -74,14 +74,25 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
   host = 'wobble.tv'
-  config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
-    port: 587,
-    domain: Rails.application.secrets.domain_name,
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: Rails.application.secrets.email_provider_username,
-    password: Rails.application.secrets.email_provider_password
+  # config.action_mailer.smtp_settings = {
+  #   address: "smtp.gmail.com",
+  #   port: 587,
+  #   domain: Rails.application.secrets.domain_name,
+  #   authentication: "plain",
+  #   enable_starttls_auto: true,
+  #   user_name: Rails.application.secrets.email_provider_username,
+  #   password: Rails.application.secrets.email_provider_password
+  # }
+
+  ActionMailer::Base.smtp_settings = {
+      :address              => "smtp.zoho.com",
+      :port                 => 465,
+      :user_name            => 'info@wobble.tv',
+      :password             => '_signupsignup9090',
+      :authentication       => :login,
+      :ssl                  => true,
+      :tls                  => true,
+      :enable_starttls_auto => true
   }
   # ActionMailer Config
   config.action_mailer.default_url_options = { :host => Rails.application.secrets.domain_name }
