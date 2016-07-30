@@ -88,10 +88,8 @@ Rails.application.configure do
       :address              => "smtp.zoho.com",
       :port                 => 465,
       :user_name            => Rails.application.secrets.email_provider_username,
-      # 'info@wobble.tv',
-      :password             => Rails.application.secrets.email_provider_password ,
-      # '_signupsignup9090',
-      :authentication       => :login,
+      :password             => Rails.application.secrets.email_provider_password,
+      :authentication       => "plain",
       :ssl                  => true,
       :tls                  => true,
       :enable_starttls_auto => true
