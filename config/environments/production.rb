@@ -87,8 +87,10 @@ Rails.application.configure do
   ActionMailer::Base.smtp_settings = {
       :address              => "smtp.zoho.com",
       :port                 => 465,
-      :user_name            => 'info@wobble.tv',
-      :password             => '_signupsignup9090',
+      :user_name            => Rails.application.secrets.email_provider_username,
+      # 'info@wobble.tv',
+      :password             => Rails.application.secrets.email_provider_password ,
+      # '_signupsignup9090',
       :authentication       => :login,
       :ssl                  => true,
       :tls                  => true,
