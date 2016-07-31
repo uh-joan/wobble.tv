@@ -4,6 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%= content_for?(:title) ? yield(:title) : "Fullwobble" %></title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Fullwobble" %>">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ouibounce/0.0.12/ouibounce.min.js"></script>
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
     <%= csrf_meta_tags %>
@@ -16,5 +17,61 @@
     <!--<= render 'layouts/messages' %>-->
     <%= yield %>
   </main>
+
+  <!-- Ouibounce Modal -->
+  <div id="ouibounce-modal">
+    <div class="underlay"></div>
+    <div class="modal">
+      <div class="modal-title">
+        <h3>Your feedback on the WOBBLE.</h3>
+      </div>
+
+      <div class="modal-body">
+        <p>Thanks for stoping by!</p>
+        <br>
+        <p>This is the first version. Before we start developing it further we need your guidance and feedback please. Don't hold back!</p>
+        <br>
+        <button type="button button-feedback" class="btn btn-success btn-block"><a href="https://docs.google.com/forms/d/e/1FAIpQLSenmDwXvkMpdWZ11Y_LtnGuOKRAbmBMYFa5C_TcIQDA1-A7xQ/viewform" target="_blank">Give feedback</a></button>
+
+        <!--<form>-->
+        <!--<input type="text" placeholder="you@email.com">-->
+        <!--<input type="submit" value="learn more &raquo;">-->
+        <!--<p class="form-notice">*this is a fake form</p>-->
+        <!--</form>-->
+      </div>
+
+      <div class="modal-footer">
+        <p>no thanks</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example page JS        -->
+  <!-- Used to fire the modal -->
+  <script>
+
+      // if you want to use the 'fire' or 'disable' fn,
+      // you need to save OuiBounce to an object
+      var _ouibounce = ouibounce(document.getElementById('ouibounce-modal'), {
+          aggressive: true,
+          timer: 0,
+          callback: function() {
+              $('#ouibounce-modal .modal').css("display", "block");
+              console.log('ouibounce fired!'); }
+      });
+
+      $('body').on('click', function() {
+          $('#ouibounce-modal').hide();
+      });
+
+      $('#ouibounce-modal .modal-footer').on('click', function() {
+          $('#ouibounce-modal').hide();
+      });
+
+      $('#ouibounce-modal .modal').on('click', function(e) {
+          e.stopPropagation();
+      });
+  </script>
+
   </body>
 </html>
