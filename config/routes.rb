@@ -3,7 +3,7 @@ require 'resque/server'
 Rails.application.routes.draw do
   # resources :videos
   resources :votes, defaults: {format: 'json'}, only: [:create, :amount]
-  resources :videos
+  resources :videos, only: [:index, :create, :edit, :new, :show, :destroy]
   resources :home, only: [:index]
 
   mount Upmin::Engine => '/admin'

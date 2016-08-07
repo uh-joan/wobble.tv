@@ -31,8 +31,8 @@ angular
   })
   .constant('_', window._)
   .value('time_step','1')
-  //.value('domain','http://localhost:3000')
-  .value('domain','https://fullsocialwobble.herokuapp.com')
+  .value('domain','http://localhost:3000')
+  //.value('domain','https://fullsocialwobble.herokuapp.com')
   //.value('domain','http://wobble.tv')
   .config(function ($routeProvider, $stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/init');

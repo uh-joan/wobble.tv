@@ -1,5 +1,6 @@
 class VideosController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
+  skip_before_filter :verify_authenticity_token, :only => :index
   before_action :set_video, only: [:show, :edit, :update, :destroy]
 
   # GET /videos
