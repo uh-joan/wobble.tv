@@ -16,9 +16,9 @@
       <tr>
         <td><%= video.youtube_id %></td>
         <td><%= video.duration %></td>
-        <td><%= link_to 'Show', video %></td>
-        <td><%= link_to 'Edit', edit_video_path(video) %></td>
-        <td><%= link_to 'Destroy', video, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <!--<td><= link_to 'Show', video %></td>-->
+        <!--<td><= link_to 'Edit', edit_video_path(video) %></td>-->
+        <td><%= link_to 'Destroy', video, method: :delete, data: { confirm: 'Are you sure? Votes and intervals will be also destroyed.' } %></td>
       </tr>
     <% end %>
   </tbody>

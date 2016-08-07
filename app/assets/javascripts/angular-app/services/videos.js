@@ -25,7 +25,7 @@ angular.module('wobbleApp')
     vm.query_all = function(){
       var deferred = $q.defer();
 
-      $http.get('/videos').then(function(response){
+      $http.get('/videos.json').then(function(response){
         deferred.resolve(response.data);
       }, function(e){
         deferred.reject(e);

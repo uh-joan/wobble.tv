@@ -72,4 +72,9 @@ module EventFactory
     enqueue(event: Interval::CalculateVotesByIntervals, caller: model, additional_data: opts)
   end
 
+  def remove_votes_by_intervals(model, opts ={})
+    p "********** in remove votes: #{model.inspect}"
+    enqueue(event: Interval::RemoveVotesByIntervals, caller: model, additional_data: opts)
+  end
+
 end
